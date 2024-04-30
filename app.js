@@ -9,6 +9,8 @@ var app = express();
 
 var postRoute = require("./routes/post.route");
 
+var userRoute = require("./routes/user.route");
+
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
@@ -35,6 +37,7 @@ app.use(express.json());
 
 
 app.use("/",postRoute);
+app.use("/",userRoute);
 
 
 function methodNotImplemented(req, res, next) {

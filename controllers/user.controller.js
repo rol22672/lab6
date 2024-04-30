@@ -2,6 +2,7 @@
 
 const pool = require ('../db/conn');
 var jwt = require("../services/jwt");
+var bcrypt = require("bcrypt-nodejs");
 
 
 
@@ -9,18 +10,18 @@ var jwt = require("../services/jwt");
 async function login(req,res){
     var params = req.body;
 
-    if(params.username && params.password){
+    if(params.email && params.password){
 
-            const [rows] = await pool.query('SELECT * FROM user WHERE username='+username+'');
+            const [rows] = await pool.query('SELECT * FROM user WHERE email="'+params.email+'"');
 
             if(rows.length==1){
                 let userFind = rows[0];
-
                 bcrypt.compare(params.password,userFind.password,(err,passwordCheck)=>{
                     if(err){                        
                         return res.status(500).send({message:"error general al comparar", err});
                     }else if(passwordCheck){
                         if(params.getToken){
+                            delete userFind.password;
                             return res.send({token:
                                                 jwt.createToken(userFind),
                                                 user: userFind,
@@ -51,7 +52,7 @@ async function register(req,res){
 
     if(params.name && params.lastname && params.email && params.password){
 
-        const [rows] = await pool.query('SELECT * FROM user WHERE username='+username+'');
+        const [rows] = await pool.query('SELECT * FROM user WHERE email="'+params.email+'"');
 
         if(rows.length==1){
             let userFind = rows[0];
