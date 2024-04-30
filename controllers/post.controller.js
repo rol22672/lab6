@@ -55,12 +55,11 @@ async function updatePost(req,res){
     let title = req.body.title;
     let content = req.body.content;
     let author  = req.body.author;
-    let img64 = req.body.img;
     let id = req.params.postId;
 
     try {
         
-        const [results] = await pool.query('UPDATE post SET title = ? , content = ? , author = ? , img = ? WHERE id = ?', [title, content,author, img64, id]);
+        const [results] = await pool.query('UPDATE post SET title = ? , content = ? , author = ?  WHERE id = ?', [title, content,author, id]);
 
         return res.send({message:"post actualizado: ", results});
     } catch (error) {
@@ -77,7 +76,7 @@ async function deletePost(req,res){
         
         const [results] = await pool.query('DELETE FROM post WHERE id = ?', [id]);
 
-        return res.status(204).send({message:"post eliminado: ", results});
+        return res.status(200).send({message:"post eliminado: ", results});
     } catch (error) {
         return res.status(500).send({message:"error general",error});
     }
