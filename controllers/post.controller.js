@@ -8,9 +8,9 @@ const path = require('path');
 async function getPosts(req,res){
 
     try {
-        const [rows] = await pool.query('SELECT * FROM post');    
+        const [rows] = await pool.query('SELECT * FROM post order by id DESC');    
 
-        return res.send({message:"post encontrados: ", rows});
+        return res.send({message:"post encontrados: ",post: rows});
     } catch (error) {
         console.log("error", error);
         return res.status(500).send({message:"error general",error});
@@ -24,7 +24,7 @@ async function getPostById(req,res){
     try {
         const [rows] = await pool.query('SELECT * FROM post WHERE id='+id+'');    
 
-        return res.send({message:"post encontrado: ", rows});
+        return res.send({message:"post encontrado: ", post: rows});
     } catch (error) {
         return res.status(500).send({message:"error general",error});
     }
@@ -42,7 +42,7 @@ async function savePost(req,res){
         
         const [results] = await pool.query('INSERT INTO post (title, content, author, img) VALUES (?, ?, ?, ?)', [title, content,author, img64]);
 
-        return res.send({message:"post guardado: ", results});
+        return res.send({message:"post guardado: ", post:results});
     } catch (error) {
         return res.status(500).send({message:"error general",error});
     }
@@ -61,7 +61,7 @@ async function updatePost(req,res){
         
         const [results] = await pool.query('UPDATE post SET title = ? , content = ? , author = ?  WHERE id = ?', [title, content,author, id]);
 
-        return res.send({message:"post actualizado: ", results});
+        return res.send({message:"post actualizado: ", post: results});
     } catch (error) {
         return res.status(500).send({message:"error general",error});
     }
